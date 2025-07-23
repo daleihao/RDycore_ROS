@@ -1,0 +1,65 @@
+physics:
+  flow:
+    mode: swe
+
+numerics:
+  spatial: fv
+  temporal: euler
+  riemann: roe
+
+logging:
+  level: debug
+
+time:
+  final_time       : 5011200.0
+  time_step        : 0.25
+  coupling_interval: 3600.0
+  unit             : seconds
+
+output:
+  directory: CA_output_dt_0_25s_2017
+  format: xdmf
+  step_interval: 14400
+  batch_size: 24
+  time_series:
+    boundary_fluxes: 14400
+
+grid:
+  file: CA2017_jigsaw_30m.exo
+
+# one region represents the whole domain
+regions:
+  - name: domain
+    grid_region_id: 1
+
+surface_composition:
+  - region: domain
+    material: smooth
+
+materials:
+  - name: smooth
+    properties:
+      manning:
+        file: CA2017_jigsaw_30m_manning_2017.int32.bin
+        format: binary
+
+initial_conditions:
+  - region: domain
+    flow: domain_flow_ic
+
+boundaries:
+  - name: watershed_outlet
+    grid_boundary_id: 1
+
+boundary_conditions:
+  - boundaries: [watershed_outlet]
+    flow: outflow_bc
+
+flow_conditions:
+  - name: domain_flow_ic
+    type: dirichlet
+    height: 0.1
+    x_momentum: 0
+    y_momentum: 0
+  - name: outflow_bc
+    type: critical-outflow
