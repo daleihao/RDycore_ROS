@@ -1,1 +1,1 @@
-# RDycore_ROS
+# Code and data for RDycore ROS study.
